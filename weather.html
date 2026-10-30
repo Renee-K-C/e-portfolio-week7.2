@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jiarui Zhou — Weather</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Jiarui<span>Zhou</span></a>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="weather.html" class="active">Weather</a></li>
+        <li><a href="projects.html#language-learning">Language Learning</a></li>
+        <li><a href="clock.html">Clock</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Weather App -->
+  <main class="weather-page">
+    <div class="aura aura-mint"></div>
+    <div class="aura aura-pink"></div>
+
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">🌤️ Live Weather</span>
+        <h2>Weather Lookup</h2>
+        <p>Enter any city name to check the current weather conditions.</p>
+      </div>
+
+      <!-- Search -->
+      <div class="search-block">
+        <div class="weather-search">
+          <input type="text" id="city-input" class="weather-input" placeholder="Enter city name — suzhou, 苏州, London…" autocomplete="off" />
+          <button id="search-btn" class="btn btn-primary">🔍 Search</button>
+        </div>
+
+        <!-- City match picker -->
+        <div id="city-picker" class="city-picker" hidden>
+          <p class="city-picker-hint">Multiple matches found — pick one:</p>
+          <ul id="city-options" class="city-options"></ul>
+        </div>
+      </div>
+
+      <!-- Weather Display -->
+      <div id="weather-display" class="weather-display">
+        <div class="weather-placeholder">
+          <span style="font-size:4rem;">🌈</span>
+          <p>Search for a city to see the weather!</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-social">
+        <a href="#" aria-label="GitHub">🐙</a>
+        <a href="#" aria-label="LinkedIn">💼</a>
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="mailto:jiaruizhou16@gmail.com" aria-label="Email">✉️</a>
+      </div>
+      <p>© <span id="year"></span> Jiarui Zhou. Built with care.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Weather icon mapping (Amap weather codes → emoji)
+    function getWeatherEmoji(code) {
+      var icons = {
+        '100': '☀️',  // Sunny
+        '101': '⛅',  // Cloudy
+        '102': '🌤️', // Few clouds
+        '103': '🌥️', // Partly cloudy
+        '104': '☁️',  // Overcast
+        '150': '🌙',  // Clear night
+        '151': '🌙',  // Few clouds night
+        '152': '☁️',  // Partly cloudy night
+        '153': '☁️',  // Overcast night
+        '300': ' showers', '301': '🌧️', '302': '⛈️', '303': '⛈️',
+        '304': '🌧️', '305': '🌧️', '306': '🌧️', '307': '🌨️', '308': '🌧️',
+        '309': '🌦️', '310': '🌧️', '311': '🌧️', '312': '🌧️', '313': '🌧️',
+        '314': '🌧️', '315': '🌧️', '316': '🌧️', '317': '🌧️', '318': '🌧️',
+        '399': '🌧️',
+        '400': '❄️', '401': '❄️', '402': '❄️', '403': '❄️', '404': '🌨️',
+        '405': '🌨️', '406': '🌨️', '407': '🌨️', '408': '🌨️', '409': '🌨️',
+        '410': '🌨️', '499': '❄️',
+        '500': '🌫️', '501': '🌫️', '502': '🌫️', '503': '🌫️', '504': '🌫️',
+        '507': '🌬️', '508': '🌬️', '509': '🌫️', '510': '🌫️', '511': '🌫️',
+        '512': '🌫️', '513': '🌫️', '514': '🌫️', '515': '🌫️', '599': '🌫️'
+      };
+      return icons[String(code)] || '🌡️';
+    }
+
+    // City suggestions list (common Chinese + international cities)
+    var CITY_LIST = [
+      'Beijing','Shanghai','Guangzhou','Shenzhen','Tianjin','Chongqing','Suzhou','Hangzhou','Nanjing',
+      'Chengdu','Wuhan','Xian','Xi\'an','Qingdao','Dalian','Xiamen','Fuzhou','Jinan','Zhengzhou',
+      'Changsha','Hefei','Kunming','Nanning','Guiyang','Lanzhou','Taiyuan','Shijiazhuang','Shenyang',
+      'Changchun','Harbin','Ningbo','Wuxi','Foshan','Dongguan','Zhuhai','Zhongshan','Huizhou',
+      'Hong Kong','Macau','Taipei','Tokyo','Osaka','Kyoto','Seoul','Singapore','Bangkok','Kuala Lumpur',
+      'Jakarta','Manila','Hanoi','Ho Chi Minh City','Mumbai','Delhi','Bangalore','Chennai','Dubai',
+      'Istanbul','Paris','London','Manchester','Berlin','Munich','Rome','Milan','Madrid','Barcelona',
+      'Amsterdam','Brussels','Vienna','Zurich','Geneva','Stockholm','Copenhagen','Oslo','Helsinki',
+      'Prague','Budapest','Warsaw','Lisbon','Athens','Moscow','New York','Los Angeles','Chicago',
+      'Houston','Phoenix','Philadelphia','San Diego','San Francisco','Seattle','Boston','Denver',
+      'Washington','Toronto','Vancouver','Montreal','Mexico City','Sao Paulo','Rio de Janeiro',
+      'Buenos Aires','Sydney','Melbourne','Brisbane','Auckland','Cairo','Lagos','Nairobi',
+      'Johannesburg','Cape Town','Tel Aviv','Riyadh','Mecca','Doha','Kuwait City','Karachi','Lahore'
+    ];
+
+    function levenshtein(a, b) {
+      a = a.toLowerCase(); b = b.toLowerCase();
+      var m = a.length, n = b.length;
+      if (m === 0) return n;
+      if (n === 0) return m;
+      var d = [];
+      for (var i = 0; i <= m; i++) { d[i] = [i]; }
+      for (var j = 0; j <= n; j++) { d[0][j] = j; }
+      for (i = 1; i <= m; i++) {
+        for (j = 1; j <= n; j++) {
+          var cost = a[i-1] === b[j-1] ? 0 : 1;
+          d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+cost);
+        }
+      }
+      return d[m][n];
+    }
+
+    function suggestCities(query) {
+      var q = query.toLowerCase().trim();
+      if (!q) return [];
+      var scored = CITY_LIST.map(function(city) {
+        var cl = city.toLowerCase();
+        var dist = levenshtein(q, cl);
+        var boost = 0;
+        if (cl.indexOf(q) === 0) boost = 5;
+        else if (cl.indexOf(q) !== -1) boost = 2;
+        return { city: city, score: boost - dist };
+      });
+      scored.sort(function(a, b) { return b.score - a.score; });
+      return scored.filter(function(s) { return s.score > -4; }).slice(0, 5).map(function(s) { return s.city; });
+    }
+
+    function showNotFoundWithSuggestions(query) {
+      var display = document.getElementById('weather-display');
+      var suggestions = suggestCities(query);
+      var html = '<div class="weather-error"><span style="font-size:3rem;">😕</span><p>Couldn’t find “<b>' + query + '</b>”. Did you mean:</p>';
+      if (suggestions.length > 0) {
+        html += '<div class="weather-suggestions">';
+        suggestions.forEach(function(c) {
+          html += '<button class="weather-suggestion" data-city="' + c + '">' + c + '</button>';
+        });
+        html += '</div>';
+      } else {
+        html += '<p style="font-size:0.85rem;">No close matches. Please check the spelling.</p>';
+      }
+      html += '</div>';
+      display.innerHTML = html;
+      var btns = display.querySelectorAll('.weather-suggestion');
+      btns.forEach(function(b) {
+        b.addEventListener('click', function() {
+          var city = b.getAttribute('data-city');
+          document.getElementById('city-input').value = city;
+          fetchWeather();
+        });
+      });
+    }
+
+    var GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search';
+
+    // Resolve a typed query into every place it could mean.
+    async function geocodeCities(query) {
+      var url = GEOCODE_URL + '?name=' + encodeURIComponent(query) + '&count=12&language=zh&format=json';
+      var proxies = [
+        function (u) { return u; },
+        function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
+        function (u) { return 'https://corsproxy.io/?url=' + encodeURIComponent(u); },
+        function (u) { return 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u); }
+      ];
+      for (var i = 0; i < proxies.length; i++) {
+        try {
+          var response = await fetchWithTimeout(proxies[i](url), 4000);
+          if (!response.ok) continue;
+          var data = await response.json();
+          if (!data || !data.results) return [];
+          // Keep populated places only — drops airports, hills and parks
+          return data.results
+            .filter(function (r) { return r.feature_code && r.feature_code.indexOf('PPL') === 0; })
+            .sort(function (a, b) { return (b.population || 0) - (a.population || 0); })
+            .slice(0, 6);
+        } catch (e) { /* try next proxy */ }
+      }
+      return [];
+    }
+
+    // Chinese place names collide when typed as pinyin (suzhou = 苏州 or 宿州),
+    // so prefix the province — the weather API resolves "江苏苏州" correctly.
+    function cityQuery(place) {
+      if (place.country_code === 'CN' && place.admin1) return place.admin1 + place.name;
+      return place.name;
+    }
+
+    function cityRegion(place) {
+      if (place.country_code === 'CN') return place.admin1 || '';
+      return [place.admin1, place.country].filter(Boolean).join(' · ');
+    }
+
+    function hidePicker() {
+      document.getElementById('city-picker').hidden = true;
+    }
+
+    function showPicker(places) {
+      var picker = document.getElementById('city-picker');
+      var list = document.getElementById('city-options');
+      list.innerHTML = '';
+      places.forEach(function (place) {
+        var li = document.createElement('li');
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'city-option';
+        btn.innerHTML =
+          '<span class="city-option-name"></span>' +
+          '<span class="city-option-region"></span>';
+        btn.querySelector('.city-option-name').textContent = place.name;
+        btn.querySelector('.city-option-region').textContent = cityRegion(place);
+        btn.addEventListener('click', function () {
+          hidePicker();
+          document.getElementById('city-input').value = place.name;
+          fetchWeather(cityQuery(place));
+        });
+        li.appendChild(btn);
+        list.appendChild(li);
+      });
+      picker.hidden = false;
+    }
+
+    async function handleSearch() {
+      var input = document.getElementById('city-input');
+      var query = input.value.trim();
+      if (!query) { input.focus(); return; }
+      hidePicker();
+
+      var matches = await geocodeCities(query);
+      if (matches.length > 1) {
+        showPicker(matches);
+        document.getElementById('weather-display').innerHTML =
+          '<div class="weather-placeholder"><span style="font-size:4rem;">🔎</span>' +
+          '<p>More than one place matches “' + query + '”. Choose the one you want.</p></div>';
+        return;
+      }
+      fetchWeather(matches.length === 1 ? cityQuery(matches[0]) : query);
+    }
+
+    function fetchWithTimeout(url, ms) {
+      return Promise.race([
+        fetch(url),
+        new Promise(function (_, reject) {
+          setTimeout(function () { reject(new Error('timeout')); }, ms);
+        })
+      ]);
+    }
+
+    async function fetchWeather(resolvedCity) {
+      var city = resolvedCity || document.getElementById('city-input').value.trim();
+      if (!city) {
+        document.getElementById('city-input').focus();
+        return;
+      }
+
+      var display = document.getElementById('weather-display');
+      display.innerHTML = '<div class="weather-loading"><span class="weather-spinner"></span><p>Loading weather...</p></div>';
+
+      try {
+        var apiUrl = 'https://uapis.cn/api/v1/misc/weather?city=' + encodeURIComponent(city);
+        var proxies = [
+          function (u) { return u; },
+          function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
+          function (u) { return 'https://corsproxy.io/?url=' + encodeURIComponent(u); },
+          function (u) { return 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u); }
+        ];
+        var data = null;
+        for (var i = 0; i < proxies.length; i++) {
+          try {
+            var response = await fetchWithTimeout(proxies[i](apiUrl), 3500);
+            if (!response.ok) continue;
+            data = await response.json();
+            if (data && data.city) break;
+          } catch (e) { /* try next proxy */ }
+        }
+
+        if (!data || !data.city) {
+          showNotFoundWithSuggestions(city);
+          return;
+        }
+
+        var emoji = getWeatherEmoji(data.weather_icon);
+
+        display.innerHTML =
+          '<div class="weather-card">' +
+            '<div class="weather-card-header">' +
+              '<div class="weather-emoji">' + emoji + '</div>' +
+              '<div class="weather-city-info">' +
+                '<h3>' + data.city + '</h3>' +
+                '<p class="weather-province">' + (data.province || '') + '</p>' +
+              '</div>' +
+            '</div>' +
+            '<div class="weather-temp">' + data.temperature + '<span class="weather-degree">°C</span></div>' +
+            '<div class="weather-condition">' + (data.weather || '') + '</div>' +
+            '<div class="weather-details">' +
+              '<div class="weather-detail-item">' +
+                '<span class="weather-detail-label">💨 Wind</span>' +
+                '<span class="weather-detail-value">' + (data.wind_direction || '—') + ' ' + (data.wind_power || '') + '</span>' +
+              '</div>' +
+              '<div class="weather-detail-item">' +
+                '<span class="weather-detail-label">💧 Humidity</span>' +
+                '<span class="weather-detail-value">' + (data.humidity || '—') + '%</span>' +
+              '</div>' +
+            '</div>' +
+            '<p class="weather-report-time">🕐 ' + (data.report_time || '') + '</p>' +
+          '</div>';
+      } catch (err) {
+        console.error('Weather fetch failed:', err);
+        display.innerHTML = '<div class="weather-error"><span style="font-size:3rem;">⚠️</span><p>Could not load weather. Please check your network and try again.</p></div>';
+      }
+    }
+
+    var searchInput = document.getElementById('city-input');
+    document.getElementById('search-btn').addEventListener('click', handleSearch);
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSearch();
+      } else if (e.key === 'Escape') {
+        hidePicker();
+      }
+    });
+
+    // Suggest matches while typing, so the choice is visible before searching
+    var suggestTimer = null;
+    searchInput.addEventListener('input', function() {
+      clearTimeout(suggestTimer);
+      var query = searchInput.value.trim();
+      if (query.length < 2) { hidePicker(); return; }
+      suggestTimer = setTimeout(async function() {
+        var matches = await geocodeCities(query);
+        if (matches.length > 1) showPicker(matches);
+        else hidePicker();
+      }, 450);
+    });
+    searchInput.addEventListener('blur', function() {
+      setTimeout(hidePicker, 180);
+    });
+  </script>
+</body>
+</html>

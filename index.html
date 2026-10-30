@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Personal website — portfolio, projects, and contact." />
+  <title>Jiarui Zhou — Home</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="home">
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Jiarui<span>Zhou</span></a>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="projects.html#language-learning">Language Learning</a></li>
+        <li><a href="clock.html">Clock</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="aura aura-mint"></div>
+    <div class="aura aura-pink"></div>
+    <div class="aura aura-lilac"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="avatar-wrap">
+          <div class="hero-avatar" aria-label="Profile picture">
+            <img src="profile.jpg" alt="Jiarui Zhou profile picture" />
+          </div>
+          <span class="sparkle s1">✨</span>
+          <span class="sparkle s2">🌸</span>
+          <span class="sparkle s3">💗</span>
+          <span class="sparkle s4">⭐</span>
+        </div>
+        <div class="hero-text">
+          <h1>Hi, I'm <span>Jiarui Zhou</span> <span class="bunny-emoji" aria-hidden="true">
+            <svg width="70" height="70" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <!-- Floppy ears -->
+              <g class="bunny-ear bunny-ear-left">
+                <ellipse cx="38" cy="32" rx="11" ry="28" fill="#ffffff" stroke="#ff9ac1" stroke-width="2.5" transform="rotate(-25 38 32)"/>
+                <ellipse cx="38" cy="35" rx="5.5" ry="20" fill="#ffc4de" transform="rotate(-25 38 35)"/>
+              </g>
+              <g class="bunny-ear bunny-ear-right">
+                <ellipse cx="82" cy="32" rx="11" ry="28" fill="#ffffff" stroke="#ff9ac1" stroke-width="2.5" transform="rotate(25 82 32)"/>
+                <ellipse cx="82" cy="35" rx="5.5" ry="20" fill="#ffc4de" transform="rotate(25 82 35)"/>
+              </g>
+              <!-- Head -->
+              <circle cx="60" cy="72" r="33" fill="#ffffff" stroke="#ff9ac1" stroke-width="2.5"/>
+              <!-- Cheeks -->
+              <circle cx="40" cy="78" r="5.5" fill="#ffb9d6" opacity="0.7"/>
+              <circle cx="80" cy="78" r="5.5" fill="#ffb9d6" opacity="0.7"/>
+              <!-- Eyes -->
+              <ellipse cx="49" cy="68" rx="4" ry="5" fill="#3d2a33"/>
+              <ellipse cx="71" cy="68" rx="4" ry="5" fill="#3d2a33"/>
+              <circle cx="50.2" cy="66.5" r="1.5" fill="#ffffff"/>
+              <circle cx="72.2" cy="66.5" r="1.5" fill="#ffffff"/>
+              <!-- Nose -->
+              <path d="M57.5 77 Q60 80.5 62.5 77 Q60 75 57.5 77 Z" fill="#ff4fa8"/>
+              <!-- Mouth -->
+              <path d="M60 80 Q57 84 54 83 M60 80 Q63 84 66 83" stroke="#3d2a33" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              <path d="M57 83 Q57.5 86 58 85" stroke="#ffffff" stroke-width="1.2" fill="#ffffff"/>
+              <!-- Tiny bow between ears -->
+              <g transform="translate(60 18)">
+                <path d="M-8 -2 L0 2 L0 -2 Z" fill="#ff4fa8"/>
+                <path d="M8 -2 L0 2 L0 -2 Z" fill="#ff4fa8"/>
+                <circle cx="0" cy="0" r="2" fill="#ff80b8"/>
+              </g>
+              <!-- Whiskers -->
+              <line x1="28" y1="76" x2="40" y2="77" stroke="#ff9ac1" stroke-width="1"/>
+              <line x1="28" y1="82" x2="40" y2="81" stroke="#ff9ac1" stroke-width="1"/>
+              <line x1="80" y1="77" x2="92" y2="76" stroke="#ff9ac1" stroke-width="1"/>
+              <line x1="80" y1="81" x2="92" y2="82" stroke="#ff9ac1" stroke-width="1"/>
+            </svg>
+          </span></h1>
+          <p class="lead">
+            Master's student at XJTLU · Coffee lover, R&amp;B enthusiast, and lifelong learner.
+          </p>
+          <div class="hero-actions">
+            <a href="projects.html" class="btn btn-primary">See My Projects →</a>
+            <a href="contact.html" class="btn btn-secondary">Say Hi Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Things I Like -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">A Few of My Favorite Things</span>
+        <h2>Three things I really love</h2>
+        <p>
+          When I'm not coding, you'll probably find me doing one of these.
+        </p>
+      </div>
+
+      <div class="skills-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        <div class="card skill-card">
+          <div class="skill-icon">☕</div>
+          <h3>Good Coffee</h3>
+          <p>Starting every morning with a warm cup — pour-over, espresso, anything with a nice aroma.</p>
+        </div>
+        <div class="card skill-card">
+          <div class="skill-icon">📚</div>
+          <h3>Reading &amp; Learning</h3>
+          <p>Always got a book on the go. I love stories, ideas, and picking up new skills.</p>
+        </div>
+        <div class="card skill-card">
+          <div class="skill-icon">🎵</div>
+          <h3>Making Music</h3>
+          <p>Strumming guitar, tinkering with synths, or just putting together playlists for any mood.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section section-alt">
+    <div class="aura aura-mint"></div>
+    <div class="aura aura-pink"></div>
+    <div class="container" style="text-align:center;">
+      <span class="eyebrow">Let's Connect</span>
+      <h2>Got an idea or just want to chat?</h2>
+      <p style="max-width: 560px; margin: 0 auto 2rem;">
+        My inbox is always open — whether it's a fun project, a question, or
+        just to swap recommendations for great coffee.
+      </p>
+      <a href="contact.html" class="btn btn-primary">Write Me a Note ✨</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-social">
+        <a href="#" aria-label="GitHub">🐙</a>
+        <a href="#" aria-label="LinkedIn">💼</a>
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="#" aria-label="Email">✉️</a>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--accent); margin-bottom: 0.5rem;">
+        🎉 Fun fact: I once tried 12 different coffee shops in one weekend.
+      </p>
+      <p>© <span id="year"></span> Jiarui Zhou — made with warmth and care.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

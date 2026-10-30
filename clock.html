@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jiarui Zhou — World Clock</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Jiarui<span>Zhou</span></a>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="projects.html#language-learning">Language Learning</a></li>
+        <li><a href="clock.html" class="active">Clock</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- World Clock -->
+  <main class="clock-page">
+    <div class="aura aura-mint"></div>
+    <div class="aura aura-pink"></div>
+
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">🌍 World Clock</span>
+        <h2>Time Around the World</h2>
+        <p>Live local times for cities across every timezone — ticking every second.</p>
+      </div>
+
+      <!-- Your local time -->
+      <div class="local-clock" id="local-clock">
+        <div class="local-clock-head">
+          <span class="local-clock-pin">📍</span>
+          <div>
+            <div class="local-clock-label">Your Local Time</div>
+            <div class="local-clock-zone" id="local-zone">—</div>
+          </div>
+          <span class="local-clock-daynight" id="local-daynight"></span>
+        </div>
+        <div class="local-clock-time" id="local-time">--:--:--</div>
+        <div class="local-clock-date" id="local-date">—</div>
+      </div>
+
+      <!-- Add a city -->
+      <div class="clock-search-block">
+        <div class="weather-search">
+          <input type="text" id="clock-input" class="weather-input" placeholder="Add a city — tokyo, paris, new york…" autocomplete="off" />
+          <button id="clock-add" class="btn btn-primary">➕ Add</button>
+        </div>
+        <div id="clock-picker" class="city-picker" hidden>
+          <p class="city-picker-hint">Multiple matches — pick one:</p>
+          <ul id="clock-options" class="city-options"></ul>
+        </div>
+      </div>
+
+      <p id="clock-status" class="clock-status" role="status"></p>
+      <div class="clocks-grid" id="clocks-grid"></div>
+      <p class="clocks-empty" id="clocks-empty" hidden>No clocks yet — search above to add a city. 🌏</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-social">
+        <a href="#" aria-label="GitHub">🐙</a>
+        <a href="#" aria-label="LinkedIn">💼</a>
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="mailto:jiaruizhou16@gmail.com" aria-label="Email">✉️</a>
+      </div>
+      <p>© <span id="year"></span> Jiarui Zhou. Built with care.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    var DEFAULT_CITIES = [
+      { name: 'Suzhou', region: 'China · Jiangsu', tz: 'Asia/Shanghai' },
+      { name: 'Tokyo', region: 'Japan', tz: 'Asia/Tokyo' },
+      { name: 'Singapore', region: 'Singapore', tz: 'Asia/Singapore' },
+      { name: 'Dubai', region: 'UAE', tz: 'Asia/Dubai' },
+      { name: 'London', region: 'United Kingdom', tz: 'Europe/London' },
+      { name: 'Paris', region: 'France', tz: 'Europe/Paris' },
+      { name: 'New York', region: 'USA · New York', tz: 'America/New_York' },
+      { name: 'Los Angeles', region: 'USA · California', tz: 'America/Los_Angeles' }
+    ];
+    var STORAGE_KEY = 'eportfolio-world-clock';
+    var GEOCODE_URL = 'https://geocoding-api.open-meteo.com/v1/search';
+    var localZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+    var cities = loadCities();
+
+    function loadCities() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return DEFAULT_CITIES.slice();
+        var parsed = JSON.parse(raw);
+        return Array.isArray(parsed) && parsed.length ? parsed : DEFAULT_CITIES.slice();
+      } catch (e) { return DEFAULT_CITIES.slice(); }
+    }
+
+    function saveCities() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cities)); } catch (e) {}
+    }
+
+    function timeFormatter(tz) {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+      });
+    }
+
+    function dateFormatter(tz) {
+      return new Intl.DateTimeFormat('en-US', {
+        timeZone: tz, weekday: 'long', month: 'short', day: 'numeric', year: 'numeric'
+      });
+    }
+
+    function hourIn(tz, now) {
+      var h = new Intl.DateTimeFormat('en-GB', {
+        timeZone: tz, hour: '2-digit', hour12: false
+      }).formatToParts(now).filter(function (p) { return p.type === 'hour'; })[0];
+      var hour = parseInt(h.value, 10);
+      return hour === 24 ? 0 : hour;
+    }
+
+    function dayPhase(tz, now) {
+      var h = hourIn(tz, now);
+      if (h >= 6 && h < 8) return { icon: '🌅', label: 'Dawn' };
+      if (h >= 8 && h < 17) return { icon: '☀️', label: 'Daytime' };
+      if (h >= 17 && h < 19) return { icon: '🌇', label: 'Sunset' };
+      if (h >= 19 && h < 21) return { icon: '🌆', label: 'Dusk' };
+      return { icon: '🌙', label: 'Night' };
+    }
+
+    function offsetHours(tz, now) {
+      var part = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz, timeZoneName: 'shortOffset'
+      }).formatToParts(now).filter(function (p) { return p.type === 'timeZoneName'; })[0];
+      if (!part) return '';
+      var m = /GMT([+-])(\d{1,2})(?::(\d{2}))?/.exec(part.value);
+      if (!m) return part.value.replace('GMT', 'UTC');
+      return 'UTC' + (m[1] === '-' ? '-' : '+') + m[2] + (m[3] ? ':' + m[3] : '');
+    }
+
+    function render() {
+      var grid = document.getElementById('clocks-grid');
+      grid.innerHTML = '';
+      cities.forEach(function (city) {
+        var card = document.createElement('article');
+        card.className = 'clock-card';
+        card.setAttribute('data-tz', city.tz);
+        card.innerHTML =
+          '<div class="clock-card-head"><div><h3 class="clock-card-name"></h3>' +
+          '<p class="clock-card-region"></p><p class="clock-card-tz"></p></div>' +
+          '<button type="button" class="clock-remove" aria-label="Remove city" title="Remove city">✕</button></div>' +
+          '<div class="clock-card-time"><span class="clock-hhmmss"></span></div>' +
+          '<div class="clock-card-foot"><span class="clock-phase"></span><span class="clock-offset"></span></div>' +
+          '<div class="clock-card-date"></div>';
+        card.querySelector('.clock-card-name').textContent = city.name;
+        card.querySelector('.clock-card-region').textContent = city.region || '';
+        card.querySelector('.clock-card-tz').textContent = city.tz;
+        card.querySelector('.clock-remove').addEventListener('click', function () { removeCity(city); });
+        grid.appendChild(card);
+      });
+      document.getElementById('clocks-empty').hidden = cities.length > 0;
+    }
+
+    function removeCity(city) {
+      cities = cities.filter(function (c) { return !(c.name === city.name && c.tz === city.tz); });
+      saveCities();
+      render();
+      tick();
+    }
+
+    function tick() {
+      var now = new Date();
+      document.getElementById('local-time').textContent = timeFormatter(localZone).format(now);
+      document.getElementById('local-date').textContent = dateFormatter(localZone).format(now);
+      document.getElementById('local-zone').textContent = localZone.replace(/_/g, ' ') + ' · ' + offsetHours(localZone, now);
+      var lp = dayPhase(localZone, now);
+      var lb = document.getElementById('local-daynight');
+      lb.textContent = lp.icon + ' ' + lp.label;
+      lb.className = 'local-clock-daynight phase-' + lp.label.toLowerCase();
+      document.querySelectorAll('.clock-card').forEach(function (card) {
+        var tz = card.getAttribute('data-tz');
+        card.querySelector('.clock-hhmmss').textContent = timeFormatter(tz).format(now);
+        card.querySelector('.clock-card-date').textContent = dateFormatter(tz).format(now);
+        var phase = dayPhase(tz, now);
+        var badge = card.querySelector('.clock-phase');
+        badge.textContent = phase.icon + ' ' + phase.label;
+        badge.className = 'clock-phase phase-' + phase.label.toLowerCase();
+        card.querySelector('.clock-offset').textContent = offsetHours(tz, now);
+      });
+    }
+
+    function hidePicker() { document.getElementById('clock-picker').hidden = true; }
+
+    function showPicker(places) {
+      var picker = document.getElementById('clock-picker');
+      var list = document.getElementById('clock-options');
+      list.innerHTML = '';
+      places.forEach(function (place) {
+        var li = document.createElement('li');
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'city-option';
+        btn.innerHTML = '<span class="city-option-name"></span><span class="city-option-region"></span>';
+        btn.querySelector('.city-option-name').textContent = place.name;
+        btn.querySelector('.city-option-region').textContent = place.region || place.timezone || '';
+        btn.addEventListener('click', function () {
+          hidePicker();
+          document.getElementById('clock-input').value = '';
+          addCity({ name: place.name, region: place.region, tz: place.timezone });
+        });
+        li.appendChild(btn);
+        list.appendChild(li);
+      });
+      picker.hidden = false;
+    }
+
+    function addCity(city) {
+      if (!city || !city.tz) return;
+      if (!cities.some(function (c) { return c.name === city.name && c.tz === city.tz; })) {
+        cities.push(city);
+        saveCities();
+        render();
+      }
+      tick();
+    }
+
+    function fetchWithTimeout(url, ms) {
+      return Promise.race([
+        fetch(url),
+        new Promise(function (_, reject) { setTimeout(function () { reject(new Error('timeout')); }, ms); })
+      ]);
+    }
+
+    async function lookupCity(query) {
+      var url = GEOCODE_URL + '?name=' + encodeURIComponent(query) + '&count=12&language=en&format=json';
+      var proxies = [
+        function (u) { return u; },
+        function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
+        function (u) { return 'https://corsproxy.io/?url=' + encodeURIComponent(u); },
+        function (u) { return 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u); }
+      ];
+      for (var i = 0; i < proxies.length; i++) {
+        try {
+          var response = await fetchWithTimeout(proxies[i](url), 4000);
+          if (!response.ok) continue;
+          var data = await response.json();
+          if (!data || !data.results) return [];
+          return data.results
+            .filter(function (r) { return r.feature_code && r.feature_code.indexOf('PPL') === 0 && r.timezone; })
+            .sort(function (a, b) { return (b.population || 0) - (a.population || 0); })
+            .slice(0, 6);
+        } catch (e) {}
+      }
+      return [];
+    }
+
+    function regionLabel(place) {
+      if (place.country_code === 'CN') return place.admin1 || 'China';
+      return [place.admin1, place.country].filter(Boolean).join(' · ');
+    }
+
+    async function handleAdd() {
+      var input = document.getElementById('clock-input');
+      var query = input.value.trim();
+      if (!query) { input.focus(); return; }
+      hidePicker();
+      var status = document.getElementById('clock-status');
+      var matches = await lookupCity(query);
+      if (!matches.length) {
+        status.textContent = 'Couldn’t find “' + query + '”. Try a different spelling.';
+        status.className = 'clock-status error';
+        return;
+      }
+      status.textContent = '';
+      status.className = 'clock-status';
+      if (matches.length > 1) {
+        showPicker(matches.map(function (m) {
+          return { name: m.name, region: regionLabel(m), timezone: m.timezone };
+        }));
+        return;
+      }
+      var only = matches[0];
+      addCity({ name: only.name, region: regionLabel(only), tz: only.timezone });
+      input.value = '';
+    }
+
+    var clockInput = document.getElementById('clock-input');
+    document.getElementById('clock-add').addEventListener('click', handleAdd);
+    clockInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); handleAdd(); }
+      else if (e.key === 'Escape') hidePicker();
+    });
+    var clockSuggestTimer = null;
+    clockInput.addEventListener('input', function () {
+      clearTimeout(clockSuggestTimer);
+      var query = clockInput.value.trim();
+      if (query.length < 2) { hidePicker(); return; }
+      clockSuggestTimer = setTimeout(async function () {
+        var matches = await lookupCity(query);
+        if (matches.length > 1) {
+          showPicker(matches.map(function (m) {
+            return { name: m.name, region: regionLabel(m), timezone: m.timezone };
+          }));
+        } else hidePicker();
+      }, 450);
+    });
+    clockInput.addEventListener('blur', function () { setTimeout(hidePicker, 180); });
+    render();
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>

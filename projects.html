@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jiarui Zhou — Projects</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    #language-learning {
+      --quiz-ink: #292a2c;
+      --quiz-pink: #f41486;
+      --quiz-mint: #56d7ad;
+      --quiz-yellow: #d7b2bf;
+      color: var(--quiz-ink);
+    }
+    #language-learning * { box-sizing: border-box; }
+    #language-learning .quiz-app {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: clamp(22px, 5vw, 48px);
+      border: 1px solid #b9bbbe;
+      border-radius: 8px;
+      background: rgba(246, 246, 245, 0.94);
+    }
+    #language-learning .quiz-screen { min-height: 440px; text-align: center; }
+    #language-learning .quiz-home,
+    #language-learning .quiz-victory {
+      min-height: 440px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #language-learning .quiz-mascot { margin: 0 0 12px; font-size: 76px; line-height: 1; }
+    #language-learning .quiz-title { margin: 8px 0 12px; color: var(--quiz-pink); font-size: 42px; }
+    #language-learning .quiz-subtitle { margin: 0 0 30px; color: #716780; font-size: 20px; }
+    #language-learning .quiz-primary {
+      min-height: 52px;
+      padding: 12px 24px;
+      border: 0;
+      border-radius: 6px;
+      color: #292a2c;
+      background: var(--quiz-yellow);
+      font: inherit;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    #language-learning .quiz-primary:hover { filter: brightness(.96); }
+    #language-learning button:focus-visible { outline: 3px solid #6751a2; outline-offset: 3px; }
+    #language-learning .quiz-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    #language-learning .quiz-count { font-weight: 800; }
+    #language-learning .quiz-progress { height: 10px; margin-bottom: 25px; overflow: hidden; border-radius: 5px; background: #eee7f3; }
+    #language-learning .quiz-progress-fill { width: 0; height: 100%; background: #f41486; transition: width .25s ease; }
+    #language-learning .quiz-prompt { margin: 0 0 16px; font-size: 26px; }
+    #language-learning .quiz-picture { width: min(100%, 320px); height: 220px; margin: 0 auto 24px; display: grid; place-items: center; }
+    #language-learning .quiz-picture img { width: 100%; height: 100%; object-fit: contain; }
+    #language-learning .quiz-answers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; max-width: 540px; margin: 0 auto; }
+    #language-learning .quiz-answer {
+      min-height: 60px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      border: 2px solid #e8e0f0;
+      border-radius: 6px;
+      color: var(--quiz-ink);
+      background: #fff;
+      font: inherit;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    #language-learning .quiz-answer:hover:not(:disabled) { border-color: #b6a4d2; background: #fcf8ff; }
+    #language-learning .quiz-answer:disabled { cursor: default; }
+    #language-learning .quiz-answer.wrong { color: #a72e41; border-color: #ee8a93; background: #fff0f1; }
+    #language-learning .quiz-answer.correct { color: #14684f; border-color: #56d7ad; background: #e3faf2; }
+    #language-learning .quiz-feedback { min-height: 30px; margin: 16px 0 0; font-weight: 800; }
+    #language-learning .quiz-feedback.try-again { color: #d94355; }
+    #language-learning .quiz-feedback.well-done { color: #16845d; }
+    #language-learning .quiz-stars { margin: 2px 0 14px; font-size: 36px; }
+    #language-learning .quiz-copy { margin: 0 0 28px; font-size: 20px; }
+    #language-learning [hidden] { display: none !important; }
+    @media (max-width: 520px) {
+      #language-learning .quiz-screen,
+      #language-learning .quiz-home,
+      #language-learning .quiz-victory { min-height: 420px; }
+      #language-learning .quiz-picture { height: 190px; }
+      #language-learning .quiz-answers { gap: 9px; }
+      #language-learning .quiz-answer { min-height: 56px; padding: 10px; font-size: 17px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #language-learning *, #language-learning *::before, #language-learning *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Jiarui<span>Zhou</span></a>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="projects.html" class="active">Projects</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="#language-learning">Language Learning</a></li>
+        <li><a href="clock.html">Clock</a></li>
+        <li><a href="contact.html" class="nav-cta">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Projects Header -->
+  <section class="section" style="padding-top: 4rem;">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">My Work</span>
+        <h2>Featured Projects</h2>
+        <p>
+          A selection of things I've built recently — from side projects to
+          production apps. Click any card to learn more.
+        </p>
+      </div>
+
+      <div class="projects-grid">
+
+        <article class="project-card">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #e3f1eb, #cce6db); color: #35443d;">K-pop</div>
+          <div class="project-body">
+            <h3>K-pop News</h3>
+            <p>A fun fan-made website for aggregating the latest K-pop news, comebacks, and updates from your favorite groups.</p>
+            <div class="project-tags">
+              <span class="tag">HTML</span>
+              <span class="tag">CSS</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">News</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-thumb" style="background: linear-gradient(135deg, #f4e5eb, #e8ccd8); color: #513d47;">R&amp;B</div>
+          <div class="project-body">
+            <h3>R&B Music Zone</h3>
+            <p>A tribute to the golden voices of classic R&B — Marvin Gaye, Stevie Wonder, Aretha Franklin, and more. Their sound defined generations.</p>
+            <div class="project-tags">
+              <span class="tag">Music</span>
+              <span class="tag">Profiles</span>
+              <span class="tag">Vintage</span>
+              <span class="tag">Soul</span>
+            </div>
+            <a class="project-play-link" href="#language-learning">Play English Words</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="language-learning">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Word Garden</span>
+        <h2>Language Learning</h2>
+        <p>Learn three new English words.</p>
+      </div>
+      <main class="quiz-app" aria-live="polite">
+        <section class="quiz-screen quiz-home" id="quiz-home">
+          <div class="quiz-mascot" aria-hidden="true">🐻</div>
+          <h2 class="quiz-title">Let's learn English</h2>
+          <p class="quiz-subtitle">Ready to play and learn new words?</p>
+          <button class="quiz-primary" id="quiz-start" type="button">Start!</button>
+        </section>
+        <section class="quiz-screen" id="quiz-question" hidden>
+          <div class="quiz-top"><span class="quiz-count" id="quiz-count">Question 1 of 3</span><span aria-hidden="true">⭐</span></div>
+          <div class="quiz-progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><div class="quiz-progress-fill" id="quiz-progress"></div></div>
+          <p class="quiz-prompt">What do you see?</p>
+          <div class="quiz-picture"><img id="quiz-image" src="1.jpg" alt="An apple" draggable="false"></div>
+          <div class="quiz-answers" id="quiz-answers"></div>
+          <p class="quiz-feedback" id="quiz-feedback" aria-live="assertive"></p>
+        </section>
+        <section class="quiz-screen quiz-victory" id="quiz-victory" hidden>
+          <div class="quiz-mascot" aria-hidden="true">🦊</div>
+          <div class="quiz-stars" aria-hidden="true">🌟 🎉 🌟</div>
+          <h2 class="quiz-title">You did it!</h2>
+          <p class="quiz-copy">You learned all 3 words. Great job!</p>
+          <button class="quiz-primary" id="quiz-again" type="button">Play again</button>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <!-- K-Pop Concert Calendar -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">🎤 Fan Zone</span>
+        <h2>K-Pop Concert Calendar</h2>
+        <p>Upcoming shows from your favorite stars. Pick an emoji + priority when adding your own, and leave a comment below each concert!</p>
+      </div>
+
+      <div class="concert-app">
+        <!-- Progress bar -->
+        <div class="concert-progress">
+          <span class="concert-progress-text"><span id="going-count">0</span> of <span id="total-count">0</span> concerts marked <span class="going-label">💖 Going</span></span>
+          <div class="concert-progress-bar"><div id="going-bar" class="concert-progress-fill"></div></div>
+        </div>
+
+        <!-- Concert list -->
+        <div id="concert-list" class="concert-list"></div>
+
+        <!-- Add form -->
+        <div class="concert-add">
+          <h3 style="margin-bottom: 1rem;">➕ Add your own concert</h3>
+
+          <div class="concert-input-row">
+            <input type="date" id="concert-date" class="concert-date-input" />
+            <input type="text" id="concert-artist" class="concert-text-input" placeholder="Artist (e.g., IU)" />
+            <input type="text" id="concert-venue" class="concert-text-input" placeholder="Venue & City" />
+          </div>
+
+          <!-- Emoji picker -->
+          <div class="emoji-picker-wrap">
+            <span class="picker-label">Mood:</span>
+            <div class="emoji-picker" id="emoji-picker">
+              <button type="button" class="emoji-btn" data-emoji="💖">💖</button>
+              <button type="button" class="emoji-btn" data-emoji="🔥">🔥</button>
+              <button type="button" class="emoji-btn" data-emoji="✨">✨</button>
+              <button type="button" class="emoji-btn" data-emoji="🎤">🎤</button>
+              <button type="button" class="emoji-btn" data-emoji="💫">💫</button>
+              <button type="button" class="emoji-btn" data-emoji="🌸">🌸</button>
+              <button type="button" class="emoji-btn" data-emoji="🎶">🎶</button>
+              <button type="button" class="emoji-btn" data-emoji="🥳">🥳</button>
+              <button type="button" class="emoji-btn selected" data-emoji="🎫">🎫</button>
+            </div>
+          </div>
+
+          <!-- Priority -->
+          <div class="priority-wrap">
+            <span class="picker-label">Priority:</span>
+            <div class="priority-picker">
+              <label class="priority-option priority-low">
+                <input type="radio" name="priority" value="low" />
+                <span>Low 🌱</span>
+              </label>
+              <label class="priority-option priority-medium selected">
+                <input type="radio" name="priority" value="medium" checked />
+                <span>Medium ⭐</span>
+              </label>
+              <label class="priority-option priority-high">
+                <input type="radio" name="priority" value="high" />
+                <span>High 🔥</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="concert-add-btn-row">
+            <button id="concert-add" class="btn btn-primary concert-add-btn">Add Concert</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- R&B Music Zone -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">🎶 R&B Music Zone</span>
+        <h2>Classic R&B Legends</h2>
+        <p>The golden voices that shaped R&B — from Motown to the Quiet Storm. These are the artists whose grooves and ballads still hit hard.</p>
+      </div>
+
+      <div class="rnb-grid">
+
+        <article class="rnb-card">
+          <div class="rnb-portrait">
+            <img src="marvin_gaye.jpg" alt="Marvin Gaye" style="object-position: 50% 18%;" />
+          </div>
+          <div class="rnb-info">
+            <h3>Marvin Gaye</h3>
+            <span class="rnb-years">1939 – 1984</span>
+            <p>The Prince of Motown. From "Let's Get It On" to "Sexual Healing," his smooth falsetto and socially conscious lyrics redefined soul music. <em>"What's Going On"</em> remains one of the greatest albums ever made.</p>
+          </div>
+        </article>
+
+        <article class="rnb-card">
+          <div class="rnb-portrait">
+            <img src="stevie_wonder.jpg" alt="Stevie Wonder" />
+          </div>
+          <div class="rnb-info">
+            <h3>Stevie Wonder</h3>
+            <span class="rnb-years">1950 – present</span>
+            <p>A blind prodigy who became one of the most influential musicians in history. "Superstition," "Isn't She Lovely," and "Higher Ground" showcase his genius as a singer, songwriter, and multi-instrumentalist.</p>
+          </div>
+        </article>
+
+        <article class="rnb-card">
+          <div class="rnb-portrait">
+            <img src="aretha_franklin.jpg" alt="Aretha Franklin" style="object-position: 50% 20%;" />
+          </div>
+          <div class="rnb-info">
+            <h3>Aretha Franklin</h3>
+            <span class="rnb-years">1942 – 2018</span>
+            <p>The undisputed Queen of Soul. Her voice could move mountains — hear it in "Respect," "Think," and "Natural Woman." A symbol of strength, grace, and the civil rights movement.</p>
+          </div>
+        </article>
+
+        <article class="rnb-card">
+          <div class="rnb-portrait">
+            <img src="luther_vandross.jpg" alt="Luther Vandross" style="object-position: 50% 35%;" />
+          </div>
+          <div class="rnb-info">
+            <h3>Luther Vandross</h3>
+            <span class="rnb-years">1951 – 2005</span>
+            <p>The Velvet Voice. Luther ruled Quiet Storm radio with silky ballads like "Here and Now" and "Dance with My Father." Eight Grammy wins and a legacy of romance in every note.</p>
+          </div>
+        </article>
+
+        <article class="rnb-card">
+          <div class="rnb-portrait">
+            <img src="otis.jpg" alt="Otis Redding portrait" style="object-position: 50% 20%;" />
+          </div>
+          <div class="rnb-info">
+            <h3>Otis Redding</h3>
+            <span class="rnb-years">1941 – 1967</span>
+            <p>The King of Soul. His raw, fiery delivery on "(Sittin' On) The Dock of the Bay," "Try a Little Tenderness," and "I've Been Loving You Too Long" defined the Stax sound — and influenced every R&B singer who came after.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- My Favorite Singers -->
+  <section class="section section-alt" id="fav-singers">
+    <div class="aura aura-mint"></div>
+    <div class="aura aura-pink"></div>
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">💗 Personal Picks</span>
+        <h2>My Favorite Singers</h2>
+        <p>The voices that live in my heart — the ones I never get tired of listening to.</p>
+      </div>
+
+      <!-- Whitney Houston Feature -->
+      <div class="fav-artist">
+        <div class="fav-artist-header">
+          <div class="fav-artist-crown">👑</div>
+          <h3>Whitney Houston</h3>
+          <span class="fav-artist-years">1963 – 2012</span>
+          <p class="fav-artist-bio">
+            <em>The Voice.</em> From "I Will Always Love You" to "Greatest Love of All,"
+            her power was unmatched. She bridged R&B and pop, becoming one of the
+            best-selling artists of all time. My absolute favorite — nobody comes close. 💕
+          </p>
+        </div>
+
+        <div class="fav-carousel">
+          <button class="fav-carousel-btn fav-carousel-prev" onclick="whitneyPrev()" aria-label="Previous photo">❮</button>
+          <div class="fav-carousel-stage">
+            <img id="whitney-img" src="whitney_houston.jpg" alt="Whitney Houston" />
+            <span class="fav-carousel-count" id="whitney-count">1 / 4</span>
+          </div>
+          <button class="fav-carousel-btn fav-carousel-next" onclick="whitneyNext()" aria-label="Next photo">❯</button>
+        </div>
+      </div>
+
+      <!-- Babyface Feature -->
+      <div class="fav-artist">
+        <div class="fav-artist-header">
+          <div class="fav-artist-crown">🎤</div>
+          <h3>Babyface</h3>
+          <span class="fav-artist-years">1958 – Present</span>
+          <p class="fav-artist-bio">
+            <em>The hitmaker.</em> Kenneth "Babyface" Edmonds wrote and produced classics like
+            "Whip Appeal," "Every Time I Close My Eyes," and Whitney's "Exhale (Shoop Shoop)."
+            12 Grammys and countless timeless ballads — the smoothest pen in R&B history. ✨
+          </p>
+        </div>
+
+        <div class="fav-carousel">
+          <button class="fav-carousel-btn fav-carousel-prev" onclick="babyfacePrev()" aria-label="Previous photo">❮</button>
+          <div class="fav-carousel-stage">
+            <img id="babyface-img" src="babyface_1.jpg" alt="Babyface" />
+            <span class="fav-carousel-count" id="babyface-count">1 / 4</span>
+          </div>
+          <button class="fav-carousel-btn fav-carousel-next" onclick="babyfaceNext()" aria-label="Next photo">❯</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Weather App Project -->
+  <section class="section" id="weather-app">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">🌤️ Mini Project</span>
+        <h2>Weather Lookup</h2>
+        <p>Enter any city name to check live weather conditions. Powered by the UAPI Weather API.</p>
+      </div>
+
+      <!-- Search -->
+      <div class="proj-weather-search">
+        <input type="text" id="proj-city-input" class="proj-weather-input" placeholder="Enter a city name (e.g., Beijing, Shanghai)" autocomplete="off" />
+        <button id="proj-search-btn" class="btn btn-primary">🔍 Search</button>
+      </div>
+
+      <!-- Display -->
+      <div id="proj-weather-display" class="proj-weather-display">
+        <div class="proj-weather-placeholder">
+          <span style="font-size:3.5rem;">🌈</span>
+          <p>Search for a city to see the weather!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const questions = [
+        { image: '1.jpg', alt: 'A red apple', answer: 'apple', choices: ['apple', 'banana', 'pear', 'grape'] },
+        { image: '2.jpg', alt: 'A friendly dog', answer: 'dog', choices: ['cat', 'dog', 'mouse', 'bird'] },
+        { image: '3.jpg', alt: 'An eye', answer: 'eye', choices: ['hand', 'foot', 'eye', 'nose'] }
+      ];
+      const home = document.getElementById('quiz-home');
+      const questionScreen = document.getElementById('quiz-question');
+      const victory = document.getElementById('quiz-victory');
+      const image = document.getElementById('quiz-image');
+      const answers = document.getElementById('quiz-answers');
+      const feedback = document.getElementById('quiz-feedback');
+      const count = document.getElementById('quiz-count');
+      const progress = document.getElementById('quiz-progress');
+      const progressBar = progress.parentElement;
+      let questionIndex = 0;
+      let locked = false;
+
+      function showScreen(active) {
+        home.hidden = active !== home;
+        questionScreen.hidden = active !== questionScreen;
+        victory.hidden = active !== victory;
+      }
+      function renderQuestion() {
+        locked = false;
+        const current = questions[questionIndex];
+        count.textContent = `Question ${questionIndex + 1} of ${questions.length}`;
+        progress.style.width = `${questionIndex / questions.length * 100}%`;
+        progressBar.setAttribute('aria-valuenow', String(questionIndex));
+        image.src = current.image;
+        image.alt = current.alt;
+        feedback.textContent = '';
+        feedback.className = 'quiz-feedback';
+        answers.replaceChildren();
+        current.choices.forEach((choice) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'quiz-answer';
+          const word = document.createElement('span');
+          word.textContent = choice;
+          const mark = document.createElement('span');
+          mark.setAttribute('aria-hidden', 'true');
+          button.append(word, mark);
+          button.addEventListener('click', () => {
+            if (locked) return;
+            if (choice !== current.answer) {
+              button.classList.add('wrong');
+              mark.textContent = '✗';
+              button.disabled = true;
+              feedback.textContent = 'Try another one!';
+              feedback.className = 'quiz-feedback try-again';
+              return;
+            }
+            locked = true;
+            button.classList.add('correct');
+            mark.textContent = '✓';
+            answers.querySelectorAll('button').forEach((option) => { option.disabled = true; });
+            feedback.textContent = 'Well done!';
+            feedback.className = 'quiz-feedback well-done';
+            progress.style.width = `${(questionIndex + 1) / questions.length * 100}%`;
+            progressBar.setAttribute('aria-valuenow', String(questionIndex + 1));
+            window.setTimeout(() => {
+              questionIndex += 1;
+              if (questionIndex === questions.length) showScreen(victory);
+              else renderQuestion();
+            }, 700);
+          });
+          answers.append(button);
+        });
+      }
+      document.getElementById('quiz-start').addEventListener('click', () => {
+        questionIndex = 0;
+        renderQuestion();
+        showScreen(questionScreen);
+      });
+      document.getElementById('quiz-again').addEventListener('click', () => showScreen(home));
+    })();
+  </script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-social">
+        <a href="#" aria-label="GitHub">🐙</a>
+        <a href="#" aria-label="LinkedIn">💼</a>
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="#" aria-label="Email">✉️</a>
+      </div>
+      <p>© <span id="year"></span> Jiarui Zhou. Built with care.</p>
+    </div>
+  </footer>
+
+  <!-- Supabase JS SDK (required for cloud sync) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script>
+    // Whitney Houston photo carousel
+    var whitneyPhotos = [
+      'whitney_houston.jpg',
+      'whitney_2.jpg',
+      'whitney_3.jpg',
+      'whitney_4.jpg'
+    ];
+    var whitneyIndex = 0;
+
+    function whitneyUpdate() {
+      var img = document.getElementById('whitney-img');
+      var count = document.getElementById('whitney-count');
+      img.style.opacity = '0';
+      setTimeout(function() {
+        img.src = whitneyPhotos[whitneyIndex];
+        img.style.opacity = '1';
+      }, 150);
+      count.textContent = (whitneyIndex + 1) + ' / ' + whitneyPhotos.length;
+    }
+
+    function whitneyNext() {
+      whitneyIndex = (whitneyIndex + 1) % whitneyPhotos.length;
+      whitneyUpdate();
+    }
+
+    function whitneyPrev() {
+      whitneyIndex = (whitneyIndex - 1 + whitneyPhotos.length) % whitneyPhotos.length;
+      whitneyUpdate();
+    }
+
+    // Babyface photo carousel
+    var babyfacePhotos = [
+      'babyface_1.jpg',
+      'babyface_2.jpg',
+      'babyface_3.jpg',
+      'babyface_4.jpg'
+    ];
+    var babyfaceIndex = 0;
+
+    function babyfaceUpdate() {
+      var img = document.getElementById('babyface-img');
+      var count = document.getElementById('babyface-count');
+      img.style.opacity = '0';
+      setTimeout(function() {
+        img.src = babyfacePhotos[babyfaceIndex];
+        // Photos 3 and 4: anchor to top to show full face/forehead
+        img.style.objectPosition = (babyfaceIndex >= babyfacePhotos.length - 2) ? '50% 0%' : '50% 50%';
+        img.style.opacity = '1';
+      }, 150);
+      count.textContent = (babyfaceIndex + 1) + ' / ' + babyfacePhotos.length;
+    }
+
+    function babyfaceNext() {
+      babyfaceIndex = (babyfaceIndex + 1) % babyfacePhotos.length;
+      babyfaceUpdate();
+    }
+
+    function babyfacePrev() {
+      babyfaceIndex = (babyfaceIndex - 1 + babyfacePhotos.length) % babyfacePhotos.length;
+      babyfaceUpdate();
+    }
+  </script>
+  <script>
+    (function () {
+      'use strict';
+
+      // Pre-seeded famous K-pop concerts (2026) — used to seed Supabase on first run
+      const defaultConcerts = [
+        { artist: 'IU',                 date: '2026-03-15', venue: 'Olympic Gymnastics Arena, Seoul', emoji: '💖', priority: 'high' },
+        { artist: 'BLACKPINK',          date: '2026-04-12', venue: 'Kyocera Dome, Osaka',              emoji: '🔥', priority: 'high' },
+        { artist: 'BLACKPINK',          date: '2026-04-19', venue: 'Gocheok Sky Dome, Seoul',          emoji: '🔥', priority: 'high' },
+        { artist: 'Stray Kids',         date: '2026-05-03', venue: 'The Forum, Los Angeles',           emoji: '🎶', priority: 'medium' },
+        { artist: 'Stray Kids',         date: '2026-05-10', venue: 'Prudential Center, Newark',        emoji: '🎶', priority: 'medium' },
+        { artist: 'SEVENTEEN',          date: '2026-06-07', venue: 'Singapore Indoor Stadium',         emoji: '💫', priority: 'medium' },
+        { artist: 'SEVENTEEN',          date: '2026-06-14', venue: 'Impact Arena, Bangkok',            emoji: '💫', priority: 'medium' },
+        { artist: 'TWICE',              date: '2026-07-05', venue: 'T-Mobile Center, Kansas City',     emoji: '✨', priority: 'medium' },
+        { artist: 'NewJeans',           date: '2026-07-26', venue: 'KSPO Dome, Seoul',                 emoji: '🌸', priority: 'high' },
+        { artist: 'aespa',              date: '2026-08-02', venue: 'Makuhari Messe, Tokyo',             emoji: '🔥', priority: 'medium' },
+        { artist: 'LE SSERAFIM',        date: '2026-08-16', venue: 'Seoul Olympic Hall',               emoji: '🌸', priority: 'medium' },
+        { artist: 'TXT',                date: '2026-09-06', venue: 'Hong Kong Coliseum',               emoji: '🎤', priority: 'low' },
+        { artist: 'BTS (OT7)',          date: '2026-10-11', venue: 'Busan Asiad Main Stadium',          emoji: '💖', priority: 'high' },
+        { artist: 'BTS (OT7)',          date: '2026-10-18', venue: 'Seoul World Cup Stadium',           emoji: '💖', priority: 'high' },
+        { artist: 'SNSD Taeyeon',       date: '2026-11-08', venue: 'Blue Square Mastercard, Seoul',    emoji: '✨', priority: 'medium' },
+      ];
+
+      // Pre-seeded warm fan comments per artist (kept in localStorage — local-only)
+      const defaultComments = {
+        'IU': [
+          { user: 'Lily',   avatar: '🌙', text: 'IU\'s voice is like a warm hug — I\'ll be front row for sure! 💛' },
+          { user: 'Minho',  avatar: '🐰', text: 'Already bought my ticket. Can\'t wait to hear "Through the Night" live!' },
+        ],
+        'BLACKPINK': [
+          { user: 'Jade',   avatar: '🖤', text: 'Finally seeing them live after 4 years! Rose\'s high notes are gonna be insane.' },
+          { user: 'Lisa',   avatar: '🌸', text: 'Bringing all my lightstick batteries. Let\'s make the dome shake! ✨' },
+        ],
+        'Stray Kids': [
+          { user: 'Felix',  avatar: '🐣', text: 'SKZ in LA?! Saving up every penny. Bang Chan, I\'m coming!' },
+          { user: 'Olive',  avatar: '🎧', text: 'Their energy is unreal. Earplugs + lightstick + voice = ready!' },
+        ],
+        'SEVENTEEN': [
+          { user: 'Carat',  avatar: '💎', text: '13 members on stage — my heart can\'t handle it. Carats unite!' },
+          { user: 'Mia',    avatar: '🌟', text: 'Wonwoo + Mingyu in one night? I need a moment 😭' },
+        ],
+        'TWICE': [
+          { user: 'Nayeon', avatar: '🍭', text: 'Twice in Kansas City — I\'m driving 5 hours. Totally worth it!' },
+          { user: 'Sana',   avatar: '💖', text: 'Cheer up, baby! Can\'t wait to see all 9 queens on stage.' },
+        ],
+        'NewJeans': [
+          { user: 'Hanni',  avatar: '🐰', text: 'OMG NewJeans dome concert?! Their stage presence is next level.' },
+          { user: 'Dani',   avatar: '☁️', text: 'Super Shy live is gonna break the internet. I\'m ready!' },
+        ],
+        'aespa': [
+          { user: 'Winter', avatar: '❄️', text: 'Aespa in Tokyo — Karina, Giselle, Winter, Ningning all in one place! ❤️' },
+        ],
+        'LE SSERAFIM': [
+          { user: 'Chaewon',avatar: '⚔️', text: 'Fearnots, let\'s make some noise! Sakura and Chaewon together again 🌸' },
+        ],
+        'TXT': [
+          { user: 'Soobin', avatar: '🐧', text: 'TXT in Hong Kong! Yeonjun\'s stage charisma is unmatched. See you there!' },
+        ],
+        'BTS (OT7)': [
+          { user: 'Army',   avatar: '💜', text: 'OT7 reunion in Busan — I\'m crying just thinking about it. Purple you forever!' },
+          { user: 'Seokjin',avatar: '🦙', text: 'Jin is back on stage! 2026 is the year of BTS OT7. LET\'S GO!' },
+          { user: 'Taehyung',avatar:'🐯', text: 'World Cup Stadium full of ARMY bombs — this will be historic. 💜' },
+        ],
+        'SNSD Taeyeon': [
+          { user: 'Sone',   avatar: '💙', text: 'Taeyeon\'s voice is pure magic. A queen on stage, always.' },
+        ],
+      };
+
+      // --- Supabase config ---
+      const SUPABASE_URL = 'https://rpztzwnezutngvyvvkrh.supabase.co';
+      const SUPABASE_KEY = 'sb_publishable_YEqBNpijQyHhH70KK97vsQ_8q_9_RI5';
+      let supabase = null;
+      try {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      } catch (err) {
+        console.error('Supabase init failed:', err);
+      }
+
+      // --- DB helpers (todos table) ---
+      async function dbLoad() {
+        const { data, error } = await supabase
+          .from('todos')
+          .select('id,task,is_complete,date,created_at')
+          .order('date', { ascending: true });
+        if (error) throw error;
+        return (data || []).map(function (r) {
+          // Concert metadata (artist/venue/emoji/priority) is stored as JSON in `task`.
+          let meta = {};
+          try { meta = JSON.parse(r.task) || {}; }
+          catch (_) { meta = { artist: typeof r.task === 'string' ? r.task : '' }; }
+          return {
+            id: String(r.id),
+            artist: meta.artist || (typeof r.task === 'string' ? r.task : '') || 'Untitled',
+            date: typeof r.date === 'string' ? r.date.slice(0, 10) : r.date,
+            venue: meta.venue || '',
+            emoji: meta.emoji || '🎫',
+            priority: meta.priority || 'medium',
+            going: !!r.is_complete
+          };
+        });
+      }
+      async function dbInsert(c) {
+        const { data, error } = await supabase.from('todos').insert({
+          task: JSON.stringify({ artist: c.artist, venue: c.venue, emoji: c.emoji, priority: c.priority }),
+          date: c.date,
+          is_complete: false
+        }).select();
+        if (error) throw error;
+        return data[0];
+      }
+      async function dbUpdate(id, patch) {
+        const { error } = await supabase.from('todos').update(patch).eq('id', id);
+        if (error) throw error;
+      }
+      async function dbDelete(id) {
+        const { error } = await supabase.from('todos').delete().eq('id', id);
+        if (error) throw error;
+      }
+      async function dbSeed() {
+        const rows = defaultConcerts.map(function (c) {
+          return {
+            task: JSON.stringify({ artist: c.artist, venue: c.venue, emoji: c.emoji, priority: c.priority }),
+            date: c.date,
+            is_complete: false
+          };
+        });
+        const { error } = await supabase.from('todos').insert(rows);
+        if (error) throw error;
+      }
+
+      const listEl       = document.getElementById('concert-list');
+      const dateIn       = document.getElementById('concert-date');
+      const artistIn     = document.getElementById('concert-artist');
+      const venueIn      = document.getElementById('concert-venue');
+      const addBtn       = document.getElementById('concert-add');
+      const emojiPicker  = document.getElementById('emoji-picker');
+
+      let concerts = [];      // { id, artist, date, venue, emoji, priority, going }
+      let comments = {};
+      let selectedEmoji = '🎫';
+      let selectedPriority = 'medium';
+
+      // --- Local fallback mode (used when Supabase is unreachable) ---
+      let localMode = false;
+      const LOCAL_KEY = 'kp-local-concerts';
+
+      function localConcertsSave() {
+        try { localStorage.setItem(LOCAL_KEY, JSON.stringify(concerts)); } catch (_) {}
+      }
+
+      function localConcertsLoad() {
+        // Prefer user's locally saved list; otherwise build from defaults
+        try {
+          const saved = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null');
+          if (Array.isArray(saved) && saved.length) return saved;
+        } catch (_) {}
+        return defaultConcerts.map(function (c, i) {
+          return {
+            id: 'local-' + (i + 1),
+            artist: c.artist, date: c.date, venue: c.venue,
+            emoji: c.emoji, priority: c.priority, going: false
+          };
+        });
+      }
+
+      // Load local comments (concerts now live in Supabase)
+      try {
+        comments = JSON.parse(localStorage.getItem('kp-comments') || 'null');
+        if (!comments || typeof comments !== 'object') comments = {};
+      } catch (_) { comments = {}; }
+
+      // Seed default comments if none saved
+      Object.keys(defaultComments).forEach(function (artist) {
+        if (!comments[artist]) comments[artist] = defaultComments[artist].slice();
+      });
+
+      dateIn.value = new Date().toISOString().split('T')[0];
+
+      function saveComments() {
+        localStorage.setItem('kp-comments', JSON.stringify(comments));
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function formatDateFull(dateStr) {
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      function formatMonthDay(dateStr) {
+        const d = new Date(dateStr + 'T00:00:00');
+        return {
+          month: d.toLocaleDateString('en-US', { month: 'short' }),
+          day: d.getDate()
+        };
+      }
+
+      function isPast(dateStr) {
+        return new Date(dateStr + 'T00:00:00') < new Date(new Date().toDateString());
+      }
+
+      function priorityClass(p) {
+        return 'priority-badge priority-' + p;
+      }
+      function priorityLabel(p) {
+        return { low: 'Low 🌱', medium: 'Medium ⭐', high: 'High 🔥' }[p] || p;
+      }
+
+      function render() {
+        listEl.innerHTML = '';
+
+        const upcoming = concerts.filter(function (c) { return !isPast(c.date); });
+        const goingCount = upcoming.filter(function (c) { return c.going; }).length;
+
+        const goingEl = document.getElementById('going-count');
+        const totalEl = document.getElementById('total-count');
+        const barEl   = document.getElementById('going-bar');
+        if (goingEl) goingEl.textContent = goingCount;
+        if (totalEl) totalEl.textContent = upcoming.length;
+        if (barEl)   barEl.style.width = upcoming.length ? (goingCount / upcoming.length * 100) + '%' : '0%';
+
+        concerts
+          .slice()
+          .sort(function (a, b) { return a.date.localeCompare(b.date); })
+          .forEach(function (c) {
+            const md = formatMonthDay(c.date);
+            const past = isPast(c.date);
+            const going = !!c.going;
+            const emoji = c.emoji || '🎫';
+            const priority = c.priority || 'medium';
+
+            const card = document.createElement('article');
+            card.className = 'concert-card' + (past ? ' past' : '') + (going ? ' going' : '');
+            card.dataset.key = c.id;
+
+            card.innerHTML =
+              '<div class="concert-date">' +
+                '<span class="concert-month">' + md.month + '</span>' +
+                '<span class="concert-day">' + md.day + '</span>' +
+              '</div>' +
+              '<div class="concert-info">' +
+                '<div class="concert-meta-row">' +
+                  '<h3 class="concert-artist concert-editable" contenteditable="true" spellcheck="false" data-field="artist">' + escapeHtml(c.artist) + '</h3>' +
+                  '<span class="' + priorityClass(priority) + '">' + priorityLabel(priority) + '</span>' +
+                  '<button type="button" class="concert-delete" data-action="delete" data-key="' + c.id + '" aria-label="Delete concert" title="Delete concert">×</button>' +
+                '</div>' +
+                '<div class="concert-venue">' +
+                  '<span class="concert-venue-emoji">' + emoji + '</span> ' +
+                  '<span class="concert-editable" contenteditable="true" spellcheck="false" data-field="venue">' + escapeHtml(c.venue) + '</span>' +
+                '</div>' +
+                '<div class="concert-full-date">' + formatDateFull(c.date) + '</div>' +
+              '</div>' +
+              '<label class="concert-going">' +
+                '<input type="checkbox" class="concert-checkbox"' + (going ? ' checked' : '') + ' data-key="' + c.id + '" />' +
+                '<span class="concert-going-label">' + (going ? '💖 Going!' : '🎫 Going?') + '</span>' +
+              '</label>';
+
+            // Build comment section
+            const artistComments = comments[c.artist] || [];
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'concert-comments';
+            commentDiv.dataset.artist = c.artist;
+
+            let commentsHtml = '';
+            if (artistComments.length > 0) {
+              commentsHtml += '<div class="comments-list">';
+              artistComments.forEach(function(cmt, idx) {
+                commentsHtml +=
+                  '<div class="comment-item">' +
+                    '<div class="comment-avatar">' + (cmt.avatar || '💬') + '</div>' +
+                    '<div class="comment-body">' +
+                      '<div class="comment-header">' +
+                        '<span class="comment-user">' + escapeHtml(cmt.user || 'Fan') + '</span>' +
+                        '<button class="comment-delete" data-idx="' + idx + '" aria-label="Delete comment">×</button>' +
+                      '</div>' +
+                      '<div class="comment-text">' + escapeHtml(cmt.text) + '</div>' +
+                    '</div>' +
+                  '</div>';
+              });
+              commentsHtml += '</div>';
+            } else {
+              commentsHtml = '<div class="comments-empty">Be the first to leave a warm comment 💌</div>';
+            }
+
+            commentsHtml +=
+              '<div class="comment-form">' +
+                '<input type="text" class="comment-avatar-input" placeholder="Avatar 😊" maxlength="2" />' +
+                '<input type="text" class="comment-user-input" placeholder="Your name" maxlength="20" />' +
+                '<input type="text" class="comment-text-input" placeholder="Leave a warm message..." maxlength="200" />' +
+                '<button class="comment-send">💌</button>' +
+              '</div>';
+
+            commentDiv.innerHTML = commentsHtml;
+            card.appendChild(commentDiv);
+            listEl.appendChild(card);
+          });
+      }
+
+      // --- Emoji picker ---
+      emojiPicker.addEventListener('click', function(e) {
+        const btn = e.target.closest('.emoji-btn');
+        if (!btn) return;
+        selectedEmoji = btn.dataset.emoji;
+        emojiPicker.querySelectorAll('.emoji-btn').forEach(function(b) { b.classList.remove('selected'); });
+        btn.classList.add('selected');
+      });
+
+      // --- Priority picker ---
+      document.querySelectorAll('input[name="priority"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          selectedPriority = radio.value;
+          document.querySelectorAll('.priority-option').forEach(function(o) { o.classList.remove('selected'); });
+          radio.closest('.priority-option').classList.add('selected');
+        });
+      });
+
+      // --- Add concert (insert into Supabase) ---
+      async function addConcert() {
+        const artist = artistIn.value.trim();
+        const venue  = venueIn.value.trim();
+        const date   = dateIn.value;
+        if (!artist || !venue) {
+          if (!artist) artistIn.focus();
+          else venueIn.focus();
+          return;
+        }
+        let newId;
+        if (localMode) {
+          newId = 'local-' + Date.now();
+          concerts.push({
+            id: newId, artist: artist, date: date, venue: venue,
+            emoji: selectedEmoji, priority: selectedPriority, going: false
+          });
+          localConcertsSave();
+        } else {
+          let row;
+          try {
+            row = await dbInsert({
+              artist: artist, date: date, venue: venue,
+              emoji: selectedEmoji, priority: selectedPriority
+            });
+          } catch (err) {
+            console.error('Insert failed:', err);
+            alert('Could not save concert to Supabase. See console for details.');
+            return;
+          }
+          newId = String(row.id);
+          concerts.push({
+            id: newId, artist: artist, date: date, venue: venue,
+            emoji: selectedEmoji, priority: selectedPriority, going: false
+          });
+        }
+        if (!comments[artist]) comments[artist] = [];
+        saveComments();
+        render();
+        artistIn.value = '';
+        venueIn.value = '';
+        artistIn.focus();
+      }
+
+      addBtn.addEventListener('click', addConcert);
+      [artistIn, venueIn].forEach(function (el) {
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter') addConcert();
+        });
+      });
+
+      // --- Toggle "going" (update is_complete in Supabase) ---
+      listEl.addEventListener('change', async function (e) {
+        if (!e.target.classList.contains('concert-checkbox')) return;
+        const id = e.target.dataset.key;
+        const c = concerts.find(function (x) { return x.id === id; });
+        if (!c) return;
+        c.going = e.target.checked;
+        render();
+        if (localMode) { localConcertsSave(); return; }
+        try { await dbUpdate(id, { is_complete: c.going }); }
+        catch (err) { console.error('Update going failed:', err); }
+      });
+
+      // --- Delete concert (remove from Supabase) ---
+      listEl.addEventListener('click', async function (e) {
+        if (!e.target.classList.contains('concert-delete')) return;
+        const id = e.target.dataset.key;
+        if (localMode) {
+          concerts = concerts.filter(function (x) { return x.id !== id; });
+          localConcertsSave();
+          render();
+          return;
+        }
+        try {
+          await dbDelete(id);
+        } catch (err) {
+          console.error('Delete failed:', err);
+          alert('Could not delete concert from Supabase. See console for details.');
+          return;
+        }
+        concerts = concerts.filter(function (x) { return x.id !== id; });
+        render();
+      });
+
+      // --- Comment interactions ---
+      listEl.addEventListener('click', function(e) {
+        // Delete comment
+        if (e.target.classList.contains('comment-delete')) {
+          const commentDiv = e.target.closest('.concert-comments');
+          const artist = commentDiv.dataset.artist;
+          const idx = parseInt(e.target.dataset.idx, 10);
+          if (!isNaN(idx) && comments[artist]) {
+            comments[artist].splice(idx, 1);
+            saveComments();
+            render();
+          }
+        }
+      });
+
+      // --- Inline edit (artist / venue) — saves changes to Supabase ---
+      let editSnapshot = null; // { el, field, id, oldArtist, oldVenue, startHTML }
+
+      listEl.addEventListener('focus', function(e) {
+        if (!e.target.classList.contains('concert-editable')) return;
+        const card = e.target.closest('.concert-card');
+        const cIdx = concerts.findIndex(function (c) { return c.id === card.dataset.key; });
+        if (cIdx === -1) return;
+        editSnapshot = {
+          el: e.target,
+          field: e.target.dataset.field,
+          id: concerts[cIdx].id,
+          oldArtist: concerts[cIdx].artist,
+          oldVenue:  concerts[cIdx].venue,
+          startHTML: e.target.innerHTML
+        };
+        // Select all text for easy replacement
+        const range = document.createRange();
+        range.selectNodeContents(e.target);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }, true);
+
+      listEl.addEventListener('keydown', function(e) {
+        if (e.target.classList.contains('concert-editable')) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            e.target.blur(); // trigger save via blur
+          } else if (e.key === 'Escape') {
+            e.preventDefault();
+            if (editSnapshot) {
+              editSnapshot.el.innerHTML = editSnapshot.startHTML;
+              editSnapshot = null;
+            }
+            e.target.blur();
+          }
+        }
+      });
+
+      listEl.addEventListener('blur', async function(e) {
+        if (!e.target.classList.contains('concert-editable')) return;
+        if (!editSnapshot || editSnapshot.el !== e.target) return;
+
+        const field  = editSnapshot.field;
+        const newVal = e.target.textContent.trim();
+        const oldVal = editSnapshot['old' + field.charAt(0).toUpperCase() + field.slice(1)];
+        if (!newVal || newVal === oldVal) {
+          // no change or empty → revert
+          e.target.innerHTML = editSnapshot.startHTML;
+          editSnapshot = null;
+          return;
+        }
+
+        const cIdx = concerts.findIndex(function (c) { return c.id === editSnapshot.id; });
+        if (cIdx === -1) { editSnapshot = null; return; }
+
+        if (field === 'artist') {
+          const oldArtist = editSnapshot.oldArtist;
+          const newArtist = newVal;
+          concerts[cIdx].artist = newArtist;
+          // Migrate comments to the new artist key
+          if (comments[oldArtist] && oldArtist !== newArtist) {
+            comments[newArtist] = (comments[newArtist] || []).concat(comments[oldArtist]);
+            delete comments[oldArtist];
+          }
+        } else if (field === 'venue') {
+          concerts[cIdx].venue = newVal;
+        }
+
+        const patch = { task: JSON.stringify({
+          artist: concerts[cIdx].artist,
+          venue: concerts[cIdx].venue,
+          emoji: concerts[cIdx].emoji,
+          priority: concerts[cIdx].priority
+        }) };
+        const editId = editSnapshot.id;
+        editSnapshot = null;
+        saveComments();
+        render();
+        if (localMode) { localConcertsSave(); return; }
+        try { await dbUpdate(editId, patch); }
+        catch (err) { console.error('Update concert failed:', err); }
+      }, true);
+
+      listEl.addEventListener('keydown', function(e) {
+        if (e.key !== 'Enter') return;
+        const sendBtn = e.target.closest('.comment-form');
+        if (!sendBtn) return;
+        addComment(sendBtn);
+      });
+
+      listEl.addEventListener('click', function(e) {
+        if (e.target.classList.contains('comment-send')) {
+          const form = e.target.closest('.comment-form');
+          addComment(form);
+        }
+      });
+
+      function addComment(form) {
+        const commentDiv = form.closest('.concert-comments');
+        const artist = commentDiv.dataset.artist;
+        const avatar = form.querySelector('.comment-avatar-input').value.trim() || '💬';
+        const user   = form.querySelector('.comment-user-input').value.trim() || 'Anonymous Fan';
+        const text   = form.querySelector('.comment-text-input').value.trim();
+        if (!text) {
+          form.querySelector('.comment-text-input').focus();
+          return;
+        }
+        if (!comments[artist]) comments[artist] = [];
+        comments[artist].push({ avatar: avatar, user: user, text: text });
+        saveComments();
+        render();
+      }
+
+      // --- Init: load concerts from Supabase (ordered by date); fall back to local data ---
+      function withTimeout(promise, ms) {
+        return Promise.race([promise, new Promise(function (_, reject) { setTimeout(function () { reject(new Error('Supabase timed out')); }, ms); })]);
+      }
+
+      async function init() {
+        if (supabase && window.supabase) {
+          try {
+            let rows = await withTimeout(dbLoad(), 4000);
+            if (rows.length === 0 && !localStorage.getItem('kp-seeded')) {
+              await withTimeout(dbSeed(), 4000);
+              localStorage.setItem('kp-seeded', '1');
+              rows = await withTimeout(dbLoad(), 4000);
+            }
+            concerts = rows;
+            render();
+            return;
+          } catch (err) {
+            console.error('Supabase load failed — using local fallback:', err);
+          }
+        }
+        // Supabase unavailable: load concerts locally (defaults or last saved state)
+        localMode = true;
+        concerts = localConcertsLoad();
+        render();
+      }
+
+      init();
+    })();
+  </script>
+
+  <!-- Weather App Script -->
+  <script>
+    (function () {
+      // Weather icon mapping (Amap weather codes → emoji)
+      function getWeatherEmoji(code) {
+        var c = String(code);
+        if (c === '100') return '☀️';
+        if (c === '101') return '⛅';
+        if (c === '102') return '🌤️';
+        if (c === '103') return '🌥️';
+        if (c === '104') return '☁️';
+        if (c >= '150' && c <= '153') return '🌙';
+        if (c >= '300' && c <= '318' || c === '399') return '🌧️';
+        if (c === '302' || c === '303') return '⛈️';
+        if (c >= '400' && c <= '410' || c === '499') return '❄️';
+        if (c >= '500' && c <= '515' || c === '599') return '🌫️';
+        if (c === '507' || c === '508') return '🌬️';
+        return '🌡️';
+      }
+
+      var input   = document.getElementById('proj-city-input');
+      var btn     = document.getElementById('proj-search-btn');
+      var display = document.getElementById('proj-weather-display');
+
+      // City suggestions list (common Chinese + international cities)
+      var CITY_LIST = [
+        'Beijing','Shanghai','Guangzhou','Shenzhen','Tianjin','Chongqing','Suzhou','Hangzhou','Nanjing',
+        'Chengdu','Wuhan','Xian','Xi\'an','Qingdao','Dalian','Xiamen','Fuzhou','Jinan','Zhengzhou',
+        'Changsha','Hefei','Kunming','Nanning','Guiyang','Lanzhou','Taiyuan','Shijiazhuang','Shenyang',
+        'Changchun','Harbin','Ningbo','Wuxi','Foshan','Dongguan','Zhuhai','Zhongshan','Huizhou',
+        'Hong Kong','Macau','Taipei','Tokyo','Osaka','Kyoto','Seoul','Singapore','Bangkok','Kuala Lumpur',
+        'Jakarta','Manila','Hanoi','Ho Chi Minh City','Mumbai','Delhi','Bangalore','Chennai','Dubai',
+        'Istanbul','Paris','London','Manchester','Berlin','Munich','Rome','Milan','Madrid','Barcelona',
+        'Amsterdam','Brussels','Vienna','Zurich','Geneva','Stockholm','Copenhagen','Oslo','Helsinki',
+        'Prague','Budapest','Warsaw','Lisbon','Athens','Moscow','New York','Los Angeles','Chicago',
+        'Houston','Phoenix','Philadelphia','San Diego','San Francisco','Seattle','Boston','Denver',
+        'Washington','Toronto','Vancouver','Montreal','Mexico City','Sao Paulo','Rio de Janeiro',
+        'Buenos Aires','Sydney','Melbourne','Brisbane','Auckland','Cairo','Lagos','Nairobi',
+        'Johannesburg','Cape Town','Tel Aviv','Riyadh','Mecca','Doha','Kuwait City','Karachi','Lahore'
+      ];
+
+      // Levenshtein distance for fuzzy matching
+      function levenshtein(a, b) {
+        a = a.toLowerCase(); b = b.toLowerCase();
+        var m = a.length, n = b.length;
+        if (m === 0) return n;
+        if (n === 0) return m;
+        var d = [];
+        for (var i = 0; i <= m; i++) { d[i] = [i]; }
+        for (var j = 0; j <= n; j++) { d[0][j] = j; }
+        for (i = 1; i <= m; i++) {
+          for (j = 1; j <= n; j++) {
+            var cost = a[i-1] === b[j-1] ? 0 : 1;
+            d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+cost);
+          }
+        }
+        return d[m][n];
+      }
+
+      function suggestCities(query) {
+        var q = query.toLowerCase().trim();
+        if (!q) return [];
+        var scored = CITY_LIST.map(function(city) {
+          var cl = city.toLowerCase();
+          var dist = levenshtein(q, cl);
+          // boost if startsWith or contains the query
+          var boost = 0;
+          if (cl.indexOf(q) === 0) boost = 5;
+          else if (cl.indexOf(q) !== -1) boost = 2;
+          return { city: city, score: boost - dist };
+        });
+        scored.sort(function(a, b) { return b.score - a.score; });
+        // Only return reasonably close matches
+        return scored.filter(function(s) { return s.score > -4; }).slice(0, 5).map(function(s) { return s.city; });
+      }
+
+      function showMessage(emoji, msg) {
+        display.innerHTML =
+          '<div class="proj-weather-msg"><span style="font-size:3rem;">' + emoji + '</span><p>' + msg + '</p></div>';
+      }
+
+      function showNotFoundWithSuggestions(query) {
+        var suggestions = suggestCities(query);
+        var html = '<div class="proj-weather-msg"><span style="font-size:3rem;">😕</span><p>Couldn’t find “<b>' + query + '</b>”. Did you mean:</p>';
+        if (suggestions.length > 0) {
+          html += '<div class="proj-weather-suggestions">';
+          suggestions.forEach(function(c) {
+            html += '<button class="proj-weather-suggestion" data-city="' + c + '">' + c + '</button>';
+          });
+          html += '</div>';
+        } else {
+          html += '<p style="font-size:0.85rem;">No close matches. Please check the spelling.</p>';
+        }
+        html += '</div>';
+        display.innerHTML = html;
+        // Attach click handlers
+        var btns = display.querySelectorAll('.proj-weather-suggestion');
+        btns.forEach(function(b) {
+          b.addEventListener('click', function() {
+            var city = b.getAttribute('data-city');
+            input.value = city;
+            searchWeather();
+          });
+        });
+      }
+
+      // Fetch with timeout (ms)
+      function fetchWithTimeout(url, ms) {
+        return Promise.race([
+          fetch(url),
+          new Promise(function (_, reject) {
+            setTimeout(function () { reject(new Error('timeout')); }, ms);
+          })
+        ]);
+      }
+
+      // Try fetching weather through multiple strategies (direct, then CORS proxies)
+      async function fetchWeather(city) {
+        var apiUrl = 'https://uapis.cn/api/v1/misc/weather?city=' + encodeURIComponent(city);
+        var proxies = [
+          function (u) { return u; },
+          function (u) { return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); },
+          function (u) { return 'https://corsproxy.io/?url=' + encodeURIComponent(u); },
+          function (u) { return 'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u); }
+        ];
+        for (var i = 0; i < proxies.length; i++) {
+          try {
+            var res = await fetchWithTimeout(proxies[i](apiUrl), 3500);
+            if (!res.ok) continue;
+            var data = await res.json();
+            if (data && data.city) return data;
+          } catch (e) { /* try next proxy */ }
+        }
+        return null;
+      }
+
+      async function searchWeather() {
+        var city = input.value.trim();
+
+        if (!city) {
+          showMessage('✏️', 'Enter a city first.');
+          return;
+        }
+
+        display.innerHTML = '<div class="proj-weather-loading"><span class="proj-weather-spinner"></span><p>Loading…</p></div>';
+
+        try {
+          var data = await fetchWeather(city);
+
+          if (!data || !data.city) {
+            showNotFoundWithSuggestions(city);
+            return;
+          }
+
+          display.innerHTML =
+            '<div class="proj-weather-card">' +
+              '<div class="proj-weather-card-top">' +
+                '<span class="proj-weather-emoji">' + getWeatherEmoji(data.weather_icon) + '</span>' +
+                '<div><h3>' + data.city + '</h3>' +
+                '<p class="proj-weather-province">' + (data.province || '') + '</p></div>' +
+              '</div>' +
+              '<div class="proj-weather-temp">' + data.temperature + '<span class="proj-weather-deg">°C</span></div>' +
+              '<div class="proj-weather-condition">' + (data.weather || '') + '</div>' +
+              '<div class="proj-weather-details">' +
+                '<span>💨 ' + (data.wind_direction || '—') + ' ' + (data.wind_power || '') + '</span>' +
+                '<span>💧 ' + (data.humidity || '—') + '%</span>' +
+              '</div>' +
+              '<p class="proj-weather-time">🕐 ' + (data.report_time || '') + '</p>' +
+            '</div>';
+        } catch (err) {
+          console.error('Weather fetch failed:', err);
+          showNotFoundWithSuggestions(city);
+        }
+      }
+
+      btn.addEventListener('click', searchWeather);
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') searchWeather();
+      });
+    })();
+  </script>
+</body>
+</html>

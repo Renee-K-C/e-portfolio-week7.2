@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jiarui Zhou — Contact</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Jiarui<span>Zhou</span></a>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="resume.html">Resume</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="projects.html#language-learning">Language Learning</a></li>
+        <li><a href="clock.html">Clock</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Contact Content -->
+  <section class="section" style="padding-top: 4rem;">
+    <div class="container">
+      <div class="contact-wrapper">
+
+        <div class="contact-intro">
+          <span class="eyebrow">Get in Touch</span>
+          <h2>Let's say hello 👋</h2>
+          <p>
+            Have a project idea, a question, or just want to chat?
+            I'd love to hear from you. Pick your favorite way to reach me.
+          </p>
+        </div>
+
+        <!-- Contact Methods -->
+        <div class="contact-methods">
+          <div class="card contact-card">
+            <div class="contact-card-icon">✉️</div>
+            <div class="contact-card-info">
+              <h4>Email</h4>
+              <a href="mailto:Jiarui.Zhou26@student.xjtlu.edu.cn">Jiarui.Zhou26@student.xjtlu.edu.cn</a>
+            </div>
+          </div>
+
+          <div class="card contact-card">
+            <div class="contact-card-icon">✉️</div>
+            <div class="contact-card-info">
+              <h4>GitHub</h4>
+              <a href="mailto:649135177@QQ.com">649135177@QQ.com</a>
+            </div>
+          </div>
+
+          <div class="card contact-card">
+            <div class="contact-card-icon">📍</div>
+            <div class="contact-card-info">
+              <h4>Location</h4>
+              <span>Suzhou, China — open to remote</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <form id="contact-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="Jane Doe" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="jane@email.com" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="What's this about?" required />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell me a bit about your idea..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+            Send Message ✨
+          </button>
+
+          <div id="form-status" class="form-status"></div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-social">
+        <a href="#" aria-label="GitHub">🐙</a>
+        <a href="#" aria-label="Twitter">🐦</a>
+        <a href="#" aria-label="Email">✉️</a>
+      </div>
+      <p>© <span id="year"></span> Jiarui Zhou. Built with care.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
